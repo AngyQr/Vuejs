@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercise One | Vue2</title>
+
+    <link rel="stylesheet" href="../Libraries/Bootstrap/css/bootstrap.min.css" type="text/css">
+</head>
+<body>
+
+    <div class="container mt-5" id="main">
+        <div class="row d-flex">
+            <div class="col-12 text-center">
+                <h1 class="my-5"> Axios </h1>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-6">
+                <ul class="list-group">
+                    <li v-for="item in list" class="list-group-item">
+                        {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <h3> JSON </h3>
+                <pre>
+                    {{ $data | json }}
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="../Libraries/Bootstrap/js/jquery-3.2.1.min.js"></script>
+    <script src="../Libraries/Bootstrap/js/popper.min.js"></script>
+    <script src="../Libraries/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Libraries/Vue/vue.js"></script>
+    <script src="../Libraries/Vue/axios.min.js"></script>
+    <script>
+
+        var urlapi = 'https://jsonplaceholder.typicode.com/users';
+
+        new Vue({
+            el: '#main',
+            created: function () {
+                this.getUsers();
+            },
+            data: {
+                list: []
+            },
+            methods: {
+                getUsers: function () {
+                    axios.get(urlapi).then(response => {
+                       this.list = response.data;
+                    });
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>

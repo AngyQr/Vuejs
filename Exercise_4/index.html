@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Excercise 4 | Vueflix </title>
+
+    <link rel="stylesheet" href="../Libraries/Bootstrap/css/bootstrap.min.css" type="text/css">
+</head>
+<body>
+
+<!-- Exercise 4: Mostrar pelis -> Se empleo componentes locales y globales -->
+
+<div class="container" id="main">
+    <div class="row mt-5 justify-content-center">
+        <!--<series-card></series-card>-->
+        <shows-card></shows-card>
+    </div>
+</div>
+
+<template id="series">
+    <div>
+        <div class="card mb-4" v-for="show in shows">
+            <img class="card-img-top" :src="show.image.medium" alt="Card image cap" width="1500px" height="290px">
+            <div class="card-body">
+                <h5 class="card-title mb-1"> {{ show.name}}</h5>
+                <h6 class="card-title text-muted"> {{ show.language}}</h6>
+                <span class="badge badge-primary mr-1" v-for="genre in show.genres">{{ genre}} </span>
+                <p class="card-text pt-3"><small class="text-muted">{{ show.url}}</small></p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script src="../Libraries/Bootstrap/js/jquery-3.2.1.min.js"></script>
+<script src="../Libraries/Bootstrap/js/popper.min.js"></script>
+<script src="../Libraries/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../Libraries/Vue/vue.js"></script>
+<script src="../Libraries/Vue/axios.min.js"></script>
+
+<script>
+
+    //Componente global
+    Vue.component('series-card',{
+        template:
+        '<div class="">' +
+        '<div class="card mb-4" v-for="show in shows">\n' +
+        '  <img class="card-img-top" :src="show.image.medium" alt="Card image cap" width="150px" height="490px">\n' +
+        '  <div class="card-body">\n' +
+        '    <h5 class="card-title mb-1"> {{ show.name}}</h5>\n' +
+        '    <h6 class="card-title text-muted"> {{ show.language}}</h6>\n' +
+        '    <span class="badge badge-primary mr-1" v-for="genre in show.genres">{{ genre}} </span>\n' +
+        '    <p class="card-text pt-3"><small class="text-muted">{{ show.url}}</small></p>\n' +
+        '  </div>\n' +
+        '</div>' +
+        '</div>',
+        mounted(){
+            axios.get('http://api.tvmaze.com/shows')
+            .then(res => { console.log(res); this.shows = res.data;});
+        },
+        data(){
+            return { shows : []}
+        }
+    });
+
+    //Componente local
+    const showCard = {
+        template: '#series',
+        mounted(){
+            axios.get('http://api.tvmaze.com/shows')
+                .then(res => { console.log(res); this.shows = res.data;});
+        },
+        data(){
+            return { shows : []}
+        }
+    };
+
+    const mv = new Vue({
+        el: '#main',
+        components: {
+            'shows-card': showCard,
+        }
+    });
+</script>
+
+</body>
+</html>

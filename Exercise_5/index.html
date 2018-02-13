@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Excercise 4 | Vueflix </title>
+
+    <link rel="stylesheet" href="../Libraries/Bootstrap/css/bootstrap.min.css" type="text/css">
+</head>
+<body>
+
+<!-- Exercise 5: Mostrar pelis -> Se empleo las propiedades de los componentes (el componente padre es el que hereda a las hijas)-->
+
+<div class="container" id="main">
+    <div class="row mt-5 justify-content-center">
+        <series-card v-for="show in shows"
+            :name="show.name" :poster="show.image.medium" :rating="show.rating.average" :genres="show.genres"
+        ></series-card>
+    </div>
+</div>
+
+<template id="series">
+    <div>
+        <div class="card mb-4">
+            <img class="card-img-top" :src="poster" :alt="name" width="200px" height="300px">
+            <div class="card-body">
+                <h5 class="card-title mb-1"> {{ name}}</h5>
+                <h6 class="card-title text-muted"> {{ rating}}</h6>
+                <span class="badge badge-primary mr-1" v-for="genre in genres">{{ genre}} </span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script src="../Libraries/Bootstrap/js/jquery-3.2.1.min.js"></script>
+<script src="../Libraries/Bootstrap/js/popper.min.js"></script>
+<script src="../Libraries/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../Libraries/Vue/vue.js"></script>
+<script src="../Libraries/Vue/axios.min.js"></script>
+
+<script>
+
+    //Componente global
+    Vue.component('series-card',{
+        template: '#series',
+        //props: ['name','poster','rating','genres'],
+        props: {
+            'name': {
+                required: true,
+                type: String,
+            },
+            'poster': String,
+            'rating': {
+                required: true,
+                type: Number,
+            },
+            'genres': {
+                required: true,
+                type: [String, Array],
+                default: 'no gendre',
+            }
+        },
+    });
+
+    const mv = new Vue({
+        el: '#main',
+        mounted(){
+            axios.get('http://api.tvmaze.com/shows')
+                .then(res => { console.log(res); this.shows = res.data;});
+        },
+        data: {
+            shows : [],
+        }
+    });
+</script>
+
+</body>
+</html>

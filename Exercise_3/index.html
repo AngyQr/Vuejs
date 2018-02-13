@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Excercise 3 </title>
+
+    <link rel="stylesheet" href="../Libraries/Bootstrap/css/bootstrap.min.css" type="text/css">
+    <!--
+    Pattern email:
+    ^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$
+    -->
+</head>
+<body>
+
+
+<div class="container" id="main">
+
+    <div class="row mt-5 justify-content-center">
+        <div class="col-3">
+            <div class="row">
+                <div class="col">
+                    <template v-if="gender">
+                        <img src="https://media.pixcove.com/M/6/0/User-Operator-Girl-Female-Free-Image-Anonymous-Fre-4212.jpg" alt="" width="200px" height="200px">
+                    </template>
+                    <template v-else="gender">
+                        <img src="https://openclipart.org/image/2400px/svg_to_png/211821/matt-icons_preferences-desktop-personal.png" alt="" width="200px" height="200px">
+                    </template>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <h6> Opcion actual: <strong > {{ getGender }} </strong></h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input @keyup="validateData" class="form-control" id="name" name="name" pattern="^[a-zA-Z\s]+$">
+                        <small class="text-danger" v-show="message_validate.name" v-text="message_validate.name"> {{ message_validate.name}}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input @keyup="validateData" class="form-control" id="email" name="email" pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$">
+                        <small class="text-danger" v-show="message_validate.email" v-text="message_validate.email"> {{ message_validate.email}} </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form class="form">
+                        <label for="inputState">Genero</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" v-model="gender" :value="true" checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Femenino
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" v-model="gender" :value="false" >
+                            <label class="form-check-label" for="exampleRadios1">
+                                Masculino
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="inputState">Ocupación</label>
+                        <select id="inputState" class="form-control" >
+                            <option  v-for="career in careers" :value="career.id"> {{ career.name }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script src="../Libraries/Bootstrap/js/jquery-3.2.1.min.js"></script>
+<script src="../Libraries/Bootstrap/js/popper.min.js"></script>
+<script src="../Libraries/Bootstrap/js/bootstrap.min.js"></script>
+<script src="../Libraries/Vue/vue.js"></script>
+<script src="../Libraries/Vue/axios.min.js"></script>
+
+<script>
+    const mv = new Vue({
+        el: '#main',
+        data: {
+            message_validate: {name: '', email: ''},
+            gender: true,
+            careers: [
+                {id: null, name: 'seleccione su ocupación'},
+                {id: 1, name: 'Diseñador Web'},
+                {id: 2, name: 'Desarrollador FrontEnd'},
+                {id: 3, name: 'Desarrollador BackEnd'},
+                {id: 4, name: 'Programador Movil'},
+            ],
+        },
+        computed: {
+            getGender: function () {
+                return (this.gender) ? 'femenino' : 'masculino';
+            }
+        },
+        methods: {
+            validateData(e){
+                let input = e.target, expression;
+                if(input.pattern){
+                    let regex = new RegExp(input.pattern);
+                    expression = !regex.exec(input.value);
+                }else{
+                    expression = !input.value;
+                }
+                if(expression){
+                    let nameInput = input.name;
+                    let message = '';
+                    if(nameInput === 'name'){
+                        message = 'No se admiten numeros';
+                    }else{
+                        message = 'Correo inválido'
+                    }
+                    this.message_validate[nameInput] = message;
+                }else{
+                    this.message_validate[input.name] = '';
+                }
+            },
+        }
+    });
+</script>
+
+</body>
+</html>
